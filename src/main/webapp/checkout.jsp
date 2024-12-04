@@ -390,6 +390,7 @@
                         </tbody>
                     </table>
                 </div>
+
                 <div class="invoice--final">
                     <div class="invoice__content">
                         <div class="price__item--detail">
@@ -418,6 +419,10 @@
                     </div>
                     <div class="ground__button--forward">
                         <button class="place__order">Đặt hàng</button>
+                        <!-- Nút tải công cụ ký số -->
+                        <div class="mt-3">
+                            <a href="/downloadTool" class="btn btn-primary">Tải công cụ ký số</a>
+                        </div>
                         <a href="shoppingCart.jsp">
                             <button class="back--shopping__cart">Quay lại giỏ hàng</button>
                         </a>

@@ -21,6 +21,7 @@ public class User implements Serializable {
     private Timestamp tokenVerifyTime;
     private String tokenResetPassword;
     private Timestamp tokenResetPasswordTime;
+    private String publicKey;
 
     public User() {
     }
@@ -151,6 +152,13 @@ public class User implements Serializable {
 
     public void setTokenResetPasswordTime(Timestamp tokenResetPasswordTime) {
         this.tokenResetPasswordTime = tokenResetPasswordTime;
+    }
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     @Override
