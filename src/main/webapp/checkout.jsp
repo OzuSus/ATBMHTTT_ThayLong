@@ -417,6 +417,10 @@
                             <span class="total__value">${sessionScope[userIdCart].totalPriceFormat(true)}</span>
                         </div>
                     </div>
+                    <div class="electronic_signature">
+                        <label for="eSign">Chữ ký điện tử:</label>
+                        <input type="text" id="eSign" name="eSign"><br><br>
+                    </div>
                     <div class="ground__button--forward">
                         <button class="place__order">Đặt hàng</button>
                         <!-- Nút tải công cụ ký số -->
@@ -595,6 +599,11 @@
         })
 
         $('.place__order').on('click', function (){
+            const signature = document.getElementById('eSign').value.trim();
+            if (!signature) {
+                alert('Vui lòng ký tên trước khi đặt hàng.');
+                return;
+            }
             $.ajax({
                 type: 'POST',
                 url: 'PlaceOrder',
