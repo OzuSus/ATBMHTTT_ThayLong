@@ -2,13 +2,18 @@ package controller.authentication;
 
 import models.User;
 import services.AuthenticateServices;
+import services.EmailService;
+import services.IMailServices;
+import services.MailRegistrationService;
 import utils.Validation;
-
+import utils.RSAKeyUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 
@@ -35,9 +40,53 @@ public class SignUp extends HttpServlet {
 
 
         if (validation.getObjReturn() != null && mapErrorPassword == null) {
-            User newUser = (User) validation.getObjReturn();
-            AuthenticateServices.getINSTANCE().createUser(newUser);
-            request.setAttribute("sendMail", "Send Mail Success");
+
+//                tạo cặp khóa RSA
+                /**
+                 *  try {
+                 * KeyPair keyPair = KeyGeneratorUtil.generateKeyPair();
+                 * String publicKey = KeyGenetarorUtil.encodeKy(keyPair.getPublic());
+                 * String privateKey = KeyGeneratorUtil.encodeKey(keyPair.getPrivateKey());
+                 * //Lấy đối tượng User và gắn public Key
+                 * User newUser = (User) vailidation.getObjReturn();
+                 * newUser.setPublicKey(publicKey);
+                 * // Lưu User vào DB
+                 * AuthenticateServices.getINSTANCE().crateUser(newUser);
+                 * // Gửi private Key qua mail
+                 * EmailService emailService = new EmailService();
+                 * emailService.sendEmail(email, " Your Private Key", "Ưelcome to our system! Your private Key is:\n\n" + privateKey);
+                 * // Hiển thị thông báo thành công
+                 * request.setAttribute("sendMail", "Send Mail Success");
+                 *
+                 *  } catch(Exception e ){
+                 *      // xử lý lỗi tạo key or gửi mail
+                 *      e.printStackTrace();
+                 *       request.setAttribute("errorMessage", "Lỗi khi xử lý đăng ký tài khoản.");
+                 *  }
+                 *
+                 * **/
+                try {
+                    KeyPair keyPair = RSAKeyUtil.generateKeyPair();
+                    String publicKey = RSAKeyUtil.encodeKeyToBase64(keyPair.getPublic());
+                    String privateKey = RSAKeyUtil.encodeKeyToBase64(keyPair.getPrivate());
+//                    tạo đối tượng User mới và gắn public key
+                    User newUser = (User) validation.getObjReturn();
+                    newUser.setPublicKey(publicKey);
+//                    Lưu user vào db
+                    AuthenticateServices.getINSTANCE().createUser(newUser);
+//                    Gửi Private Key qua mail
+                    EmailService emailService = new EmailService();
+                    MailRegistrationService mailServices = new MailRegistrationService(email, publicKey, privateKey, emailService);
+                    mailServices.send();
+                    request.setAttribute("sendMail", "Send Mail Success");
+                } catch (Exception e) {
+                   e.printStackTrace();
+                    request.setAttribute("errorMessage", "Error during registration: " + e.getMessage());
+                }
+
+//            User newUser = (User) validation.getObjReturn();
+//            AuthenticateServices.getINSTANCE().createUser(newUser);
+//            request.setAttribute("sendMail", "Send Mail Success");
         } else {
             request.setAttribute("usernameError", validation.getFieldUsername());
             request.setAttribute("emailError", validation.getFieldEmail());

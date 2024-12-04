@@ -97,7 +97,7 @@ public class UserDAOImplement implements UserDAO {
 
     @Override
     public int insert(User user) {
-        String statement = "INSERT INTO users (username, passwordEncoding, fullName, gender, email, phone, address, birthDay, isVerify, role, avatar, tokenVerifyTime, tokenVerify, tokenResetPasswordTime, tokenResetPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String statement = "INSERT INTO users (username, passwordEncoding, fullName, gender, email, phone, address, birthDay, isVerify, role, avatar, tokenVerifyTime, tokenVerify, tokenResetPasswordTime, tokenResetPassword, public_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         int count = JDBIConnector.get().withHandle(handle -> handle.createUpdate(statement)
                 .bind(0, user.getUsername())
                 .bind(1, user.getPasswordEncoding())
@@ -114,6 +114,7 @@ public class UserDAOImplement implements UserDAO {
                 .bind(12, user.getTokenVerify())
                 .bind(13, user.getTokenResetPasswordTime())
                 .bind(14, user.getTokenResetPassword())
+                .bind(15, user.getPublicKey())
                 .execute());
         return count;
     }

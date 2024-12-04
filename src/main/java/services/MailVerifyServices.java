@@ -14,10 +14,12 @@ public class MailVerifyServices implements IMailServices {
     private String username;
     private String tokenVerify;
     private Timestamp dateExpired;
+//    private String privateKey;
     public MailVerifyServices(String emailTo, String username, String tokenVerify) {
         this.emailTo = emailTo;
         this.username = username;
         this.tokenVerify = tokenVerify;
+//        this.privateKey = privateKey;
     }
 
     public MailVerifyServices(String emailTo, String username, String tokenVerify, Timestamp dateExpired) {
@@ -25,6 +27,7 @@ public class MailVerifyServices implements IMailServices {
         this.username = username;
         this.tokenVerify = tokenVerify;
         this.dateExpired = dateExpired;
+//        this.privateKey = privateKey;
     }
 
     @Override
