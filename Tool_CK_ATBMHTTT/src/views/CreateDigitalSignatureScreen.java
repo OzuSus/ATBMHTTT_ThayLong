@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.security.KeyFactory;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -16,6 +19,7 @@ import java.util.Base64;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,7 +37,7 @@ import model.DS;
 
 
 public class CreateDigitalSignatureScreen extends JPanel {
-	
+
 	private Key key = new Key();
 	private JTextArea textAreaKhoaCongKhai;
 	private JTextArea textAreaKhoaBiMat;
@@ -95,16 +99,16 @@ public class CreateDigitalSignatureScreen extends JPanel {
 		add(panel_1);
 		panel_1.setLayout(null);
 
-		JLabel lblNewLabel_2 = new JLabel("Độ dài Key");
-		lblNewLabel_2.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		lblNewLabel_2.setBounds(20, 36, 94, 26);
-		panel_1.add(lblNewLabel_2);
-
-		JComboBox comboBox = new JComboBox();
-		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] { "1024"}));
-		comboBox.setBounds(124, 36, 94, 27);
-		panel_1.add(comboBox);
+//		JLabel lblNewLabel_2 = new JLabel("Độ dài Key");
+//		lblNewLabel_2.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+//		lblNewLabel_2.setBounds(20, 36, 94, 26);
+//		panel_1.add(lblNewLabel_2);
+//
+//		JComboBox comboBox = new JComboBox();
+//		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
+//		comboBox.setModel(new DefaultComboBoxModel(new String[] { "1024"}));
+//		comboBox.setBounds(124, 36, 94, 27);
+//		panel_1.add(comboBox);
 
 		JLabel lblNewLabel_3 = new JLabel("Khóa công khai");
 		lblNewLabel_3.setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -192,45 +196,45 @@ public class CreateDigitalSignatureScreen extends JPanel {
 		scrollPane_1.setViewportView(textAreaKhoaBiMat);
 		textAreaKhoaBiMat.setBorder(null);
 
-		JButton btnKhoiTao = new JButton("Khởi tạo");
-		btnKhoiTao.setForeground(SystemColor.text);
-		btnKhoiTao.setBackground(new Color(52, 152, 219));
-		btnKhoiTao.setFocusPainted(false);
-		btnKhoiTao.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		
-		            DS ds = new DS("DSA", "SHA1PRNG", "SUN");
-		            if (ds.genKey()) {
-		             
-		                String publicKeyBase64 = Base64.getEncoder().encodeToString(ds.keyPair.getPublic().getEncoded());
-		                String privateKeyBase64 = Base64.getEncoder().encodeToString(ds.keyPair.getPrivate().getEncoded());
+//		JButton btnKhoiTao = new JButton("Khởi tạo");
+//		btnKhoiTao.setForeground(SystemColor.text);
+//		btnKhoiTao.setBackground(new Color(52, 152, 219));
+//		btnKhoiTao.setFocusPainted(false);
+//		btnKhoiTao.addActionListener(new ActionListener() {
+//		    public void actionPerformed(ActionEvent e) {
+//		        try {
+//
+//		            DS ds = new DS("RSA", "SHA256withRSA", "SUN");
+//		            if (ds.genKey()) {
+//
+//		                String publicKeyBase64 = Base64.getEncoder().encodeToString(ds.keyPair.getPublic().getEncoded());
+//		                String privateKeyBase64 = Base64.getEncoder().encodeToString(ds.keyPair.getPrivate().getEncoded());
+//
+//		                textAreaKhoaCongKhai.setText(publicKeyBase64);
+//		                textAreaKhoaBiMat.setText(privateKeyBase64);
+//
+//		                JOptionPane.showMessageDialog(null, "Tạo khóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//		            } else {
+//		                JOptionPane.showMessageDialog(null, "Không thể tạo cặp khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+//		            }
+//		        } catch (Exception ex) {
+//		            JOptionPane.showMessageDialog(null, "Lỗi khi tạo khóa: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+//		            ex.printStackTrace();
+//		        }
+//		    }
+//		});
 
-		                textAreaKhoaCongKhai.setText(publicKeyBase64);
-		                textAreaKhoaBiMat.setText(privateKeyBase64);
-
-		                JOptionPane.showMessageDialog(null, "Tạo khóa thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-		            } else {
-		                JOptionPane.showMessageDialog(null, "Không thể tạo cặp khóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		            }
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, "Lỗi khi tạo khóa: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-		            ex.printStackTrace();
-		        }
-		    }
-		});
-
-		btnKhoiTao.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-		btnKhoiTao.setBounds(239, 36, 90, 27);
-		panel_1.add(btnKhoiTao);
+//		btnKhoiTao.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+//		btnKhoiTao.setBounds(239, 36, 90, 27);
+//		panel_1.add(btnKhoiTao);
 
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
 		panel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		panel_1_1.setBorder(new TitledBorder(
-		    new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
-		    "Tạo chữ ký điện tử", TitledBorder.LEADING, TitledBorder.TOP,
-		    new Font("Segoe UI Light", Font.BOLD, 16), new Color(179, 179, 179)));
+				new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
+				"Tạo chữ ký điện tử", TitledBorder.LEADING, TitledBorder.TOP,
+				new Font("Segoe UI Light", Font.BOLD, 16), new Color(179, 179, 179)));
 		panel_1_1.setBackground(Color.WHITE);
 		panel_1_1.setBounds(480, 95, 458, 442);
 		add(panel_1_1);
@@ -275,36 +279,35 @@ public class CreateDigitalSignatureScreen extends JPanel {
 		btnKhiToFile.setBounds(135, 371, 193, 37);
 		panel_1_1.add(btnKhiToFile);
 		btnKhiToFile.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            // Lấy PrivateKey từ textAreaKhoaBiMat
-		            String privateKeyBase64 = textAreaKhoaBiMat.getText();
-		            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyBase64);
-		            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-		            KeyFactory keyFactory = KeyFactory.getInstance("DSA");
-		            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+			public void actionPerformed(ActionEvent e) {
+				try {
 
-		            // Tạo đối tượng DS để ký
-		            DS ds = new DS("DSA", "SHA1PRNG", "SUN");
-		            ds.privateKey = privateKey;
+					String privateKeyBase64 = textAreaKhoaBiMat.getText();
+					byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyBase64);
+					PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+					KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+					PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
 
-		            // Lấy nội dung cần ký từ textArea_UserName
-		            String plainText = textArea_UserName.getText();
-		            if (plainText.isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Vui lòng nhập nội dung cần ký!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-		                return;
-		            }
+					DS ds = new DS("RSA", "SHA1PRNG");
+					ds.privateKey = privateKey;
 
-		            // Ký nội dung
-		            String signature = ds.sign(plainText);
 
-		            // Hiển thị chữ ký trong textArea_Phone
-		            textArea_Phone.setText(signature);
-		        } catch (Exception ex) {
-		            JOptionPane.showMessageDialog(null, "Lỗi khi tạo chữ ký: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-		            ex.printStackTrace();
-		        }
-		    }
+					String plainText = textArea_UserName.getText();
+					if (plainText.isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Vui lòng nhập nội dung cần ký!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+
+
+					String signature = ds.sign(plainText);
+
+
+					textArea_Phone.setText(signature);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Lỗi khi tạo chữ ký: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
+				}
+			}
 		});
 
 
