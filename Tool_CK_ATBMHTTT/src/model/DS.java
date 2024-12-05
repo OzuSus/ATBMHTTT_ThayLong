@@ -13,12 +13,13 @@ public class DS {
     public DS(){
 
     }
-    public DS(String alg, String algRandom, String prov) throws NoSuchAlgorithmException, NoSuchProviderException {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance(alg, prov);
-        secureRandom = SecureRandom.getInstance(algRandom, prov);
-        generator.initialize(1024,secureRandom);
+
+    public DS(String alg, String algRandom) throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(alg);
+        secureRandom = SecureRandom.getInstance(algRandom);
+        generator.initialize(2048, secureRandom);
         keyPair = generator.genKeyPair();
-        signature = Signature.getInstance(alg,prov);
+        signature = Signature.getInstance("SHA256withRSA");
     }
 
     public boolean genKey(){
