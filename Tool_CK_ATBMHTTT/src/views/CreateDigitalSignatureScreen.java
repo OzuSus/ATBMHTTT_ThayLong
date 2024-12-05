@@ -111,6 +111,32 @@ public class CreateDigitalSignatureScreen extends JPanel {
 		lblNewLabel_3.setBounds(20, 82, 123, 26);
 		panel_1.add(lblNewLabel_3);
 
+		JButton btnLoadPublicKey = new JButton("Load Public Key");
+		btnLoadPublicKey.setForeground(SystemColor.text);
+		btnLoadPublicKey.setBackground(new Color(52, 152, 219));
+		btnLoadPublicKey.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		btnLoadPublicKey.setBounds(265, 75, 150, 27); // Vị trí nút bên cạnh TextArea khóa công khai
+		panel_1.add(btnLoadPublicKey);
+		btnLoadPublicKey.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				int result = fileChooser.showOpenDialog(null);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+						StringBuilder content = new StringBuilder();
+						String line;
+						while ((line = br.readLine()) != null) {
+							content.append(line).append("\n");
+						}
+						textAreaKhoaCongKhai.setText(content.toString().trim());
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, "Lỗi khi đọc public key: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(new LineBorder(new Color(192, 192, 192), 1, true));
@@ -128,6 +154,32 @@ public class CreateDigitalSignatureScreen extends JPanel {
 		lblNewLabel_3_1.setBounds(20, 261, 123, 26);
 		panel_1.add(lblNewLabel_3_1);
 
+		JButton btnLoadPrivateKey = new JButton("Load Private Key");
+		btnLoadPrivateKey.setForeground(SystemColor.text);
+		btnLoadPrivateKey.setBackground(new Color(52, 152, 219));
+		btnLoadPrivateKey.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		btnLoadPrivateKey.setBounds(265, 261, 150, 27); // Vị trí nút bên cạnh TextArea khóa bí mật
+		panel_1.add(btnLoadPrivateKey);
+		btnLoadPrivateKey.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				int result = fileChooser.showOpenDialog(null);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+						StringBuilder content = new StringBuilder();
+						String line;
+						while ((line = br.readLine()) != null) {
+							content.append(line).append("\n");
+						}
+						textAreaKhoaBiMat.setText(content.toString().trim());
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, "Lỗi khi đọc private key: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBorder(new LineBorder(new Color(179, 179, 179)));
