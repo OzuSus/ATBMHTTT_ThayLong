@@ -24,7 +24,6 @@ public class MailRegistrationService implements IMailServices{
                 "<p>Here are your keys:</p>" +
 //                "<p><strong>Public Key:</strong> " + publicKey + "</p>" +
 //                "<p><strong>Private Key:</strong> " + privateKey + "</p>" +
-
                 "<p>Please save your Private Key locally for future use.</p>" +
                 "</body></html>";
         try {
