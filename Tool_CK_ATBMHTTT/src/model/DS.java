@@ -10,28 +10,30 @@ public class DS {
     PublicKey publicKey;
     public PrivateKey privateKey;
 
-    public DS(){
-
+    public DS() {
     }
-    public DS(String alg, String algRandom, String prov) throws NoSuchAlgorithmException, NoSuchProviderException {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance(alg, prov);
-        secureRandom = SecureRandom.getInstance(algRandom, prov);
-        generator.initialize(1024,secureRandom);
+
+    public DS(String alg, String algRandom) throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(alg);
+        secureRandom = SecureRandom.getInstance(algRandom);
+        generator.initialize(2048, secureRandom);
         keyPair = generator.genKeyPair();
-        signature = Signature.getInstance(alg,prov);
+        signature = Signature.getInstance("SHA256withRSA");
     }
 
-    public boolean genKey(){
-        if(keyPair==null) return false;
+    public boolean genKey() {
+        if (keyPair == null) return false;
         publicKey = keyPair.getPublic();
         privateKey = keyPair.getPrivate();
         return true;
     }
-    public void loadKey(String key){
+
+    public void loadKey(String key) {
 
     }
+
     public String sign(String mess) throws InvalidKeyException, SignatureException {
-        byte[] data= mess.getBytes();
+        byte[] data = mess.getBytes();
         signature.initSign(privateKey);
         signature.update(data);
         byte[] sign = signature.sign();
@@ -46,11 +48,11 @@ public class DS {
         return signature.verify(signValue);
     }
 
-//    public static void main(String[] args) throws SignatureException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
-//        DS ds= new DS("DSA", "SHA1PRNG", "SUN");
-//        ds.genKey();
-//        String sign = ds.sign("helo");
-//        System.out.println(sign);
-//        System.out.println("Kiem tra chu ki:"+(ds.verify("helo",sign)?"":"KHONG ")+"HOP LE");
-//    }
+    public static void main(String[] args) throws SignatureException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
+        DS rsa = new DS("RSA", "SHA1PRNG");
+        rsa.genKey();
+        String sign = rsa.sign("helo");
+        System.out.println(sign);
+        System.out.println("Kiem tra chu ki:" + (rsa.verify("hElo", sign) ? "" : "KHONG ") + "HOP LE");
+    }
 }
