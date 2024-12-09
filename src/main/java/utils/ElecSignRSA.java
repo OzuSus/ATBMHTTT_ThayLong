@@ -124,7 +124,7 @@ public class ElecSignRSA {
             return new String(decryptOut);
         }
 
-    public static boolean verifySignature(String data, String signature, PublicKey publicKey) {
+    public static boolean verifySignature(String data, String signature) {
         try {
             Signature sig = Signature.getInstance("SHA256withRSA");
             sig.initVerify(publicKey);

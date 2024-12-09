@@ -1,6 +1,5 @@
 package dao;
 
-import dao.GeneralDao;
 import models.TransactionStatus;
 
 import java.util.List;
