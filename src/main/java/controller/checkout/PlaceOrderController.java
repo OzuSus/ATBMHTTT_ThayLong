@@ -19,7 +19,7 @@ public class PlaceOrderController extends HttpServlet {
 //        User userAuth = (User) session.getAttribute("auth");
 //        String userIdCart = String.valueOf(userAuth.getId());
 //        ShoppingCart cart = (ShoppingCart) session.getAttribute(userIdCart);
-        HttpSession session = request.getSession(); // Không tạo mới session
+        HttpSession session = request.getSession();
         boolean validSign = (boolean) session.getAttribute("isValid");
 
         if (validSign) {

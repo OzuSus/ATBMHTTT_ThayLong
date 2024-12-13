@@ -162,7 +162,7 @@ public class CheckoutController extends HttpServlet{
         UserDAO userDAO = new UserDAOImplement();
         User user = userDAO.selectPublicKeyById(userAuth.getId());
 
-        return verifySignature(user.getPublicKey(), user.getSign() ,signature);
+        return verifySignature(user.getPublicKey(), user.getUsername() ,signature);
     }
 
     @Override

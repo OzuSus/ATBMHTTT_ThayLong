@@ -11,7 +11,7 @@ public class UserDAOImplement implements UserDAO {
     // Electric Sign Get public key from user
     @Override
     public User selectPublicKeyById(int id) {
-        String query = "SELECT public_key, sign FROM users WHERE id = ?";
+        String query = "SELECT public_key, username FROM users WHERE id = ?";
         return GeneralDao.executeQueryWithSingleTable(query, User.class, id).get(0);
     }
 
