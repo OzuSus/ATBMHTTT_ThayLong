@@ -42,6 +42,7 @@
                     <a class="service__item" href="Account">Chỉnh sửa tài khoản</a>
                     <a class="service__item" href="ChangePassword">Đổi mật khẩu</a>
                     <a class="service__item service__item--clicked">Lịch sử mua hàng</a>
+                    <a class="service__item" href="report-key">report Key</a>
                 </div>
             </div>
             <div class="col-9">
