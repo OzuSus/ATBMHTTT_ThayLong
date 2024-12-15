@@ -37,6 +37,7 @@ public class EmailService {
 
 //    Phuong thuc gui mail co tep dinh kem
 
+    
     public void sendMaillWithAttachment(String to, String subject, String content, String filePath) throws MessagingException, IOException {
 //        Tao doi tuong mail
         MimeMessage message = new MimeMessage(session);
