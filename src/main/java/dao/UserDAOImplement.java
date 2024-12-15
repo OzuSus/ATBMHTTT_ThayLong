@@ -7,9 +7,11 @@ import java.sql.*;
 import java.util.List;
 
 public class UserDAOImplement implements UserDAO {
+
+    // Electric Sign Get public key from user
     @Override
-    public User selectById(int id) {
-        String query = "SELECT id, username, fullName, gender, phone, email, address, birthday, isVerify, role, avatar FROM users WHERE id = ?";
+    public User selectPublicKeyById(int id) {
+        String query = "SELECT public_key, username FROM users WHERE id = ?";
         return GeneralDao.executeQueryWithSingleTable(query, User.class, id).get(0);
     }
 
@@ -93,6 +95,11 @@ public class UserDAOImplement implements UserDAO {
                 "SET tokenResetPassword = ?, tokenResetPasswordTime = ? " +
                 "WHERE id = ?";
         GeneralDao.executeAllTypeUpdate(query, token, timeTokenExpired, id);
+    }
+
+    @Override
+    public User selectById(int id) {
+        return null;
     }
 
     @Override

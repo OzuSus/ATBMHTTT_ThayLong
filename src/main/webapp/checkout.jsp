@@ -417,11 +417,17 @@
                             <span class="total__value">${sessionScope[userIdCart].totalPriceFormat(true)}</span>
                         </div>
                     </div>
+                        <div class="electronic_signature">
+                            <label for="eSign">Chữ ký điện tử:</label>
+                            <input type="text" id="eSign" name="eSign" required><br><br>
+                        <input type="hidden" name="action" value="verifySignature">
+                        </div>
+                        <button type="submit" class="check_sign">Kiểm tra chữ ký</button>
                     <div class="ground__button--forward">
                         <button class="place__order">Đặt hàng</button>
                         <!-- Nút tải công cụ ký số -->
                         <div class="mt-3">
-                            <a href="/downloadTool" class="btn btn-primary">Tải công cụ ký số</a>
+                            <a href="<c:url value='/exe/Tool%20Setup.exe' />" download="Tool%20Setup.exe" class="btn btn-primary">Tải công cụ ký số</a>
                         </div>
                         <a href="shoppingCart.jsp">
                             <button class="back--shopping__cart">Quay lại giỏ hàng</button>
@@ -595,6 +601,11 @@
         })
 
         $('.place__order').on('click', function (){
+            const signature = document.getElementById('eSign').value.trim();
+            if (!signature) {
+                alert('Vui lòng ký tên trước khi đặt hàng.');
+                return;
+            }
             $.ajax({
                 type: 'POST',
                 url: 'PlaceOrder',
@@ -667,6 +678,46 @@
         // })
     }
     handlePlaceOrder();
+
+
+    //
+    function handleElectricSign() {
+        $(document).ready(function () {
+            $('.check_sign').on('click', function (event) {
+                event.preventDefault();
+
+                let electronicSignature = $('#eSign').val();
+
+                if (!electronicSignature) {
+                    alert('Vui lòng nhập chữ ký điện tử!');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'Checkout',
+                    data: {
+                        eSign: electronicSignature,
+                        action: 'verifySignature'
+                    },
+                    success: function (response) {
+                        if (response.isValid) {
+                            alert('Chữ ký hợp lệ!');
+                        } else {
+                            alert('Chữ ký không hợp lệ!');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Đã xảy ra lỗi trong quá trình xác thực chữ ký.');
+                    }
+                });
+
+            });
+        });
+    }
+    handleElectricSign();
+
 </script>
 </html>
 
