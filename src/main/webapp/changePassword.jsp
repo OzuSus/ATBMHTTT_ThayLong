@@ -55,7 +55,6 @@
                     <c:set var="errorNewPass" value="${requestScope.errorNewPass}"/>
                     <c:set var="errorConfirmPass" value="${requestScope.errorConfirmPass}"/>
                     <form action="ChangePassword" method="post">
-
                         <h1 class="title">Đổi mật khẩu</h1>
 
                         <input type="hidden" name="userId" value="<c:out value='${auth.getId()}' />">

@@ -65,7 +65,6 @@ public interface UserDAO extends DAO<User> {
     public void savePublicKey(int userId, String newPublicKey);
 //    public void updateUserPublicKey(int userId, String newPublicKey);
 
-
     List<User> getUserByIdProductDetail(int orderDetailId);
 }
 

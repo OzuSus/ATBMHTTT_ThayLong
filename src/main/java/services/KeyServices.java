@@ -45,6 +45,7 @@ public class KeyServices {
                 MailRegistrationService mailServices = new MailRegistrationService(email, newPublicKey, newPrivateKey, emailService);
                 mailServices.send();
             }else {
+
                 throw new Exception("Không thể gửi email vì không tìm thấy địa chỉ email của người dùng.");
             }
         }

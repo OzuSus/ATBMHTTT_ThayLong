@@ -200,7 +200,6 @@ public class UserDAOImplement implements UserDAO {
         String query = "DELETE FROM order_details WHERE orderId IN (SELECT id FROM orders WHERE userId = ?)";
         GeneralDao.executeAllTypeUpdate(query,userId);
     }
-
     @Override
     public void deleteOrderFromUserByUserId(int userId) {
         String query = "DELETE FROM orders WHERE userId = ?";

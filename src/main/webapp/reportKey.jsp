@@ -125,6 +125,7 @@
         <h2>Nhập mật khẩu</h2>
         <form action="${pageContext.request.contextPath}/report-key" method="post">
             <input type="hidden" name="action" value="resetKey">
+
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
                 <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required>

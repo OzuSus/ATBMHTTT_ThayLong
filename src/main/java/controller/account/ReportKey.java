@@ -90,7 +90,6 @@ public class ReportKey extends HttpServlet {
 //        // Chuyển tiếp tới trang reportKey.jsp để hiển thị kết quả
 //        req.getRequestDispatcher("reportKey.jsp").forward(req, resp);
     }
-
     private boolean validatePassword(int userId, String password) {
         try {
 //            User user =(User) UserServices.getINSTANCE().getUserByID(userId);
