@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UserDAO extends DAO<User> {
 
+    User selectPublicKeyById(int id);
+
     List<User> selectByEmail(String email, String isVerify);
 
     List<User> selectAccount(String username, String isVerify);
