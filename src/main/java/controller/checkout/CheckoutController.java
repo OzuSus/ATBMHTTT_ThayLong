@@ -8,6 +8,7 @@ import models.shoppingCart.ShoppingCart;
 import models.User;
 import org.json.JSONObject;
 import services.CheckoutServices;
+import utils.HashUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -135,6 +136,43 @@ public class CheckoutController extends HttpServlet{
                 cart.setPaymentMethod(paymentMethodDefault);
                 session.setAttribute(userIdCart, cart);
             }
+        // Tạo thông tin giỏ hàng để băm (dữ liệu bạn muốn bảo vệ)
+        String cartInfo = "ID: " + cart.getTotalItems() + "\n"
+                + "Tên khách hàng: " + userAuth.getFullName() + "\n"
+                + "Tổng tiền: " + cart.getTotalPrice(true) + " VND";
+        // Băm thông tin giỏ hàng
+        String cartInfoHashed = HashUtils.hashString(cartInfo);  // Hàm băm từ HashUtils
+
+        // Lấy mã băm cũ từ session (hoặc cơ sở dữ liệu)
+        String existingCartInfoHash = (String) session.getAttribute("cartInfoHash");
+
+        // Nếu mã băm cũ không tồn tại, đây là lần đầu tiên hoặc không có thông tin
+        if (existingCartInfoHash == null) {
+            // Lưu mã băm mới vào session
+            session.setAttribute("cartInfoHash", cartInfoHashed);
+            request.setAttribute("message", "Giỏ hàng của bạn đã được cập nhật lần đầu tiên.");
+        } else {
+            // Kiểm tra nếu có sự thay đổi trong giỏ hàng
+            if (!cartInfoHashed.equals(existingCartInfoHash)) {
+                // Nếu hash giỏ hàng đã thay đổi, thông báo cho người dùng
+                session.setAttribute("cartInfoHash", cartInfoHashed);  // Cập nhật hash mới vào session
+                request.setAttribute("message", "Giỏ hàng của bạn đã được cập nhật!");
+            } else {
+                request.setAttribute("message", "Giỏ hàng của bạn không thay đổi.");
+            }
+        }
+        request.setAttribute("cartInfoHashed", cartInfoHashed);
+        // Chuyển tiếp thông báo đến trang checkout.jsp hoặc trang khác
+        RequestDispatcher dispatcher = request.getRequestDispatcher("checkout.jsp");
+        dispatcher.forward(request, response);
+//        try {
+//            String secretKey = "1234567890123456"; // Khóa bí mật (16 ký tự)
+//            String orderInfoEncrypted = HashUtils.encryptOrderInfo(orderInfo, secretKey);
+//            request.setAttribute("orderInfoEncrypted", orderInfoEncrypted);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            request.setAttribute("orderInfoEncrypted", "Lỗi mã hóa thông tin đơn hàng");
+//        }
 
             request.setAttribute("listDeliveryMethod",listDeliveryMethod);
             request.setAttribute("listPaymentMethod", listPaymentMethod);
