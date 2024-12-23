@@ -112,30 +112,30 @@ public class CheckoutController extends HttpServlet{
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            List<DeliveryMethod> listDeliveryMethod = CheckoutServices.getINSTANCE().getAllInformationDeliveryMethod();
-            List<PaymentMethod> listPaymentMethod = CheckoutServices.getINSTANCE().getAllPaymentMethod();
-            HttpSession session = request.getSession();
+        List<DeliveryMethod> listDeliveryMethod = CheckoutServices.getINSTANCE().getAllInformationDeliveryMethod();
+        List<PaymentMethod> listPaymentMethod = CheckoutServices.getINSTANCE().getAllPaymentMethod();
+        HttpSession session = request.getSession();
 
-            User userAuth = (User) session.getAttribute("auth");
-            String userIdCart = String.valueOf(userAuth.getId());
-            ShoppingCart cart = (ShoppingCart) session.getAttribute(userIdCart);
+        User userAuth = (User) session.getAttribute("auth");
+        String userIdCart = String.valueOf(userAuth.getId());
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(userIdCart);
 
-            if(cart.getTotalPrice(false) < 5000000){
-                if(cart.getDeliveryMethod() == null){
-                    DeliveryMethod deliveryMethodDefault = CheckoutServices.getINSTANCE().getDeliveryMethodById(1);
-                    cart.setDeliveryMethod(deliveryMethodDefault);
-                    session.setAttribute(userIdCart, cart);
-                }
-            }else {
-                cart.setDeliveryMethod(null);
+        if(cart.getTotalPrice(false) < 5000000){
+            if(cart.getDeliveryMethod() == null){
+                DeliveryMethod deliveryMethodDefault = CheckoutServices.getINSTANCE().getDeliveryMethodById(1);
+                cart.setDeliveryMethod(deliveryMethodDefault);
                 session.setAttribute(userIdCart, cart);
             }
+        }else {
+            cart.setDeliveryMethod(null);
+            session.setAttribute(userIdCart, cart);
+        }
 
-            if(cart.getPaymentMethod() == null){
-                PaymentMethod paymentMethodDefault = CheckoutServices.getINSTANCE().getPaymentMethodById(1);
-                cart.setPaymentMethod(paymentMethodDefault);
-                session.setAttribute(userIdCart, cart);
-            }
+        if(cart.getPaymentMethod() == null){
+            PaymentMethod paymentMethodDefault = CheckoutServices.getINSTANCE().getPaymentMethodById(1);
+            cart.setPaymentMethod(paymentMethodDefault);
+            session.setAttribute(userIdCart, cart);
+        }
         // Tạo thông tin giỏ hàng để băm (dữ liệu bạn muốn bảo vệ)
         String cartInfo = "ID: " + cart.getTotalItems() + "\n"
                 + "Tên khách hàng: " + userAuth.getFullName() + "\n"
@@ -163,21 +163,11 @@ public class CheckoutController extends HttpServlet{
         }
         request.setAttribute("cartInfoHashed", cartInfoHashed);
         // Chuyển tiếp thông báo đến trang checkout.jsp hoặc trang khác
-        RequestDispatcher dispatcher = request.getRequestDispatcher("checkout.jsp");
-        dispatcher.forward(request, response);
-//        try {
-//            String secretKey = "1234567890123456"; // Khóa bí mật (16 ký tự)
-//            String orderInfoEncrypted = HashUtils.encryptOrderInfo(orderInfo, secretKey);
-//            request.setAttribute("orderInfoEncrypted", orderInfoEncrypted);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            request.setAttribute("orderInfoEncrypted", "Lỗi mã hóa thông tin đơn hàng");
-//        }
 
-            request.setAttribute("listDeliveryMethod",listDeliveryMethod);
-            request.setAttribute("listPaymentMethod", listPaymentMethod);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("checkout.jsp");
-            requestDispatcher.forward(request, response);
+        request.setAttribute("listDeliveryMethod",listDeliveryMethod);
+        request.setAttribute("listPaymentMethod", listPaymentMethod);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("checkout.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     public boolean verifySignature(String publicKeyString, String data, String signatureText) throws Exception {
@@ -200,7 +190,12 @@ public class CheckoutController extends HttpServlet{
         UserDAO userDAO = new UserDAOImplement();
         User user = userDAO.selectPublicKeyById(userAuth.getId());
 
-        return verifySignature(user.getPublicKey(), user.getUsername() ,signature);
+        String cartInfoHash = (String) session.getAttribute("cartInfoHash");
+        if (cartInfoHash == null) {
+            throw new IllegalStateException("Cart hash not found in session.");
+        }
+
+        return verifySignature(user.getPublicKey(), cartInfoHash, signature);
     }
 
     @Override
