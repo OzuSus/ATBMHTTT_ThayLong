@@ -105,9 +105,9 @@
                                 <p class="alert alert-danger">${error}</p>
                             </c:if>
                         </div>
-<%--                        <div class="save save__changePass">--%>
-<%--                            <button type="submit" class="btn btn-primary" name="action" value="resetKey">Report Key</button>--%>
-<%--                        </div>--%>
+                        <div class="save save__changePass">
+                            <button type="submit" class="btn btn-primary" name="action" value="resetKey">Quên Key</button>
+                        </div>
                         <div class="save save__changePass">
                             <button type="button" class="btn btn-secondary" onclick="showPasswordPopup()">Report Key</button>
                         </div>
