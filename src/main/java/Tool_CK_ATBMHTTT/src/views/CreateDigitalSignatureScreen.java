@@ -1,4 +1,4 @@
-package views;
+package Tool_CK_ATBMHTTT.src.views;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -32,8 +32,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import controller.Key;
-import model.DS;
+import Tool_CK_ATBMHTTT.src.controller.Key;
+import Tool_CK_ATBMHTTT.src.model.DS;
 
 
 public class CreateDigitalSignatureScreen extends JPanel {
