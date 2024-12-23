@@ -44,6 +44,8 @@
                     <a class="service__item" href="Account" >Chỉnh sửa tài khoảng</a>
                     <a class="service__item service__item--clicked">Đổi mật khẩu</a>
                     <a class="service__item" href="PurchaseHistory" >Lịch sử mua hàng</a>
+<%--                    <a class="report_key">report</a>--%>
+                    <a class="service__item" href="report-key">Report key</a>
                 </div>
             </div>
             <div class="col-9">
@@ -53,7 +55,6 @@
                     <c:set var="errorNewPass" value="${requestScope.errorNewPass}"/>
                     <c:set var="errorConfirmPass" value="${requestScope.errorConfirmPass}"/>
                     <form action="ChangePassword" method="post">
-
                         <h1 class="title">Đổi mật khẩu</h1>
 
                         <input type="hidden" name="userId" value="<c:out value='${auth.getId()}' />">

@@ -7,9 +7,11 @@ import java.sql.*;
 import java.util.List;
 
 public class UserDAOImplement implements UserDAO {
+
+    // Electric Sign Get public key from user
     @Override
-    public User selectById(int id) {
-        String query = "SELECT id, username, fullName, gender, phone, email, address, birthday, isVerify, role, avatar FROM users WHERE id = ?";
+    public User selectPublicKeyById(int id) {
+        String query = "SELECT public_key, username FROM users WHERE id = ?";
         return GeneralDao.executeQueryWithSingleTable(query, User.class, id).get(0);
     }
 
@@ -96,6 +98,11 @@ public class UserDAOImplement implements UserDAO {
     }
 
     @Override
+    public User selectById(int id) {
+        return null;
+    }
+
+    @Override
     public int insert(User user) {
         String statement = "INSERT INTO users (username, passwordEncoding, fullName, gender, email, phone, address, birthDay, isVerify, role, avatar, tokenVerifyTime, tokenVerify, tokenResetPasswordTime, tokenResetPassword, public_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         int count = JDBIConnector.get().withHandle(handle -> handle.createUpdate(statement)
@@ -160,7 +167,7 @@ public class UserDAOImplement implements UserDAO {
 
     @Override
     public List<User> getUserByID(int id) {
-        String querry = "SELECT id, username, email, fullName, gender, phone, address, birthDay, avatar, role FROM users WHERE id = ?";
+        String querry = "SELECT id, username, email, fullName, gender, phone, address, birthDay, avatar, role, passwordEncoding FROM users WHERE id = ?";
         return GeneralDao.executeQueryWithSingleTable(querry, User.class, id);
     }
 
@@ -193,7 +200,6 @@ public class UserDAOImplement implements UserDAO {
         String query = "DELETE FROM order_details WHERE orderId IN (SELECT id FROM orders WHERE userId = ?)";
         GeneralDao.executeAllTypeUpdate(query,userId);
     }
-
     @Override
     public void deleteOrderFromUserByUserId(int userId) {
         String query = "DELETE FROM orders WHERE userId = ?";
@@ -260,5 +266,42 @@ public class UserDAOImplement implements UserDAO {
                 .append("WHERE order_details.id = ?");
         return GeneralDao.executeQueryWithSingleTable(sql.toString(), User.class, orderDetailId);
     }
+
+    @Override
+    public void revokeCurrentKey(String userId) {
+        String query ="UPDATE users SET key_status ='revoked', key_revoked_at =NOW() WHERE id = ? AND key_status ='active'";
+       try {
+           GeneralDao.executeAllTypeUpdate(query,userId);
+       } catch (Exception e){
+           System.err.println("Error revoking key for user ID:" + userId);
+           e.printStackTrace();
+       }
+    }
+
+    @Override
+    public void savePublicKey(int userId, String newPublicKey) {
+        String query = "UPDATE users SET public_key =?, key_status = 'active', updated_at = NOW() WHERE id =?";
+        try {
+            GeneralDao.executeAllTypeUpdate(query, newPublicKey, userId);
+        }catch (Exception e){
+//           Ghi log lỗi hoặc xử lý theo cách phù hợp
+            System.err.println("Error updating public key for user ID" + userId);
+            e.printStackTrace();
+            // Nếu cần, ném lại lỗi dưới dạng RuntimeException
+            throw new RuntimeException("Failed to update public key for user ID:" + userId, e);
+        }
+    }
+
+//    @Override
+//    public void updateUserPublicKey(int userId, String newPublicKey) {
+//        String query = "UPDATE users SET public_key = ? WHERE id = ?";
+////        GeneralDao.executeAllTypeUpdate(query, newPublicKey, userId);
+//        try {
+//            GeneralDao.executeAllTypeUpdate(query, newPublicKey, userId);
+//        } catch (Exception e) {
+//            System.err.println("Error updating public key for user ID " + userId + ": " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 }
 

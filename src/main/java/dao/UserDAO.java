@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface UserDAO extends DAO<User> {
 
+    User selectPublicKeyById(int id);
+
     List<User> selectByEmail(String email, String isVerify);
 
     List<User> selectAccount(String username, String isVerify);
@@ -58,6 +60,10 @@ public interface UserDAO extends DAO<User> {
 
    public void updateInfoUser(int id,  String avatar);
 
+   // khóa key cũ
+    public void revokeCurrentKey(String userId);
+    public void savePublicKey(int userId, String newPublicKey);
+//    public void updateUserPublicKey(int userId, String newPublicKey);
 
     List<User> getUserByIdProductDetail(int orderDetailId);
 }

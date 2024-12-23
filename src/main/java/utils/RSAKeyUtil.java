@@ -4,9 +4,10 @@ import java.security.*;
 import java.util.Base64;
 
 public class RSAKeyUtil {
+
     public static KeyPair generateKeyPair() throws NoSuchAlgorithmException{
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
+        keyPairGenerator.initialize(4096);
         return keyPairGenerator.generateKeyPair();
     }
     public static String encodeKeyToBase64(PublicKey publicKey){

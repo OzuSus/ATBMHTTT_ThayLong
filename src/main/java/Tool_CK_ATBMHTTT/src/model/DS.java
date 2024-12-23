@@ -16,7 +16,7 @@ public class DS {
     public DS(String alg, String algRandom) throws NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator generator = KeyPairGenerator.getInstance(alg);
         secureRandom = SecureRandom.getInstance(algRandom);
-        generator.initialize(2048, secureRandom);
+        generator.initialize(4096, secureRandom);
         keyPair = generator.genKeyPair();
         signature = Signature.getInstance("SHA256withRSA");
     }

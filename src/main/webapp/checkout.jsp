@@ -29,6 +29,34 @@
     <link rel="stylesheet" href="assets/css/checkout.css">
 
     <title>Thanh toán</title>
+
+    <style>
+        .temporary__container {
+            display: flex;                  /* Sử dụng Flexbox để căn chỉnh */
+            flex-direction: column;         /* Sắp xếp các phần tử theo chiều dọc */
+            align-items: flex-start;        /* Căn trái các phần tử */
+            gap: 10px;                      /* Khoảng cách giữa các phần tử */
+        }
+
+        label {
+            font-weight: bold;              /* Đặt chữ đậm cho label */
+            margin-bottom: 5px;             /* Khoảng cách giữa label và textarea */
+        }
+
+        textarea {
+            width: 80%;                    /* Đảm bảo textarea chiếm hết chiều rộng của khung */
+            /*height: 40px;                  !* Giữ chiều cao ổn định *!*/
+            padding: 10px;                  /* Thêm khoảng cách bên trong */
+            font-family: monospace;         /* Chọn font dễ đọc cho chuỗi hash */
+            border: 1px solid #ccc;         /* Đặt viền cho textarea */
+            border-radius: 5px;             /* Bo góc cho textarea */
+            background-color: #f4f4f4;      /* Đặt màu nền nhẹ cho textarea */
+            resize: none;                   /* Tắt chức năng thay đổi kích thước */
+            overflow-wrap: break-word;      /* Tự động ngắt từ khi cần thiết */
+            word-wrap: break-word;          /* Ngắt từ khi vượt quá chiều rộng */
+        }
+
+    </style>
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -417,11 +445,59 @@
                             <span class="total__value">${sessionScope[userIdCart].totalPriceFormat(true)}</span>
                         </div>
                     </div>
+<%--                    hiển thị thông tin và chữ kí điện tử--%>
+                    <div class="invoice__content">
+                        <div class="price__item--detail">
+                            <div class="temporary__container">
+                                <label>Thông tin đơn hàng:</label>
+                                <textarea class="form-control" id="orderInfo" name="orderInfo" rows="3" readonly>
+                                 <%= request.getAttribute("cartInfoHashed") != null ? request.getAttribute("cartInfoHashed") : "" %>
+                                </textarea>
+                                <!-- Hình ảnh nút copy -->
+<%--                                <img src="E:\Information_Technology\HK1_2024-2025\Web\src\main\resources\copy_output.png" alt="Copy" class="copy-btn" onclick="copyToTextarea()">--%>
+<%--                                <textarea id="orderInfo" name="orderInfo" rows="1" cols="30" placeholder="Nhập thông tin đơn hàng..."></textarea>--%>
+                            </div>
+<%--                            <c:if test="${sessionScope[userIdCart].voucherApplied != null}">--%>
+<%--                                <div class="discount__container">--%>
+<%--                                    <span>Giảm giá</span>--%>
+<%--                                    <span>${sessionScope[userIdCart].discountPriceFormat()}</span>--%>
+<%--                                </div>--%>
+<%--                            </c:if>--%>
+<%--                            <c:if test="${sessionScope[userIdCart].deliveryMethod != null}">--%>
+                                <div class="shipping__container">
+                                    <div class="temporary__container">
+                                        <label for="eSign">Chữ ký điện tử:</label>
+<%--                                        <textarea id="eSign" name="eSign" placeholder="Nhập chữ ký điện tử"></textarea>--%>
+                                        <input type="text" id="eSign" name="eSign" placeholder="Nhập chữ ký điện tử" required>
+                                        <input type="hidden" name="action" value="verifySignature">
+                                    </div>
+                                </div>
+                            <div class="ground__button--forward">
+                                <button type="submit" class="check_sign">Kiểm tra chữ ký</button>
+                            </div>
+<%--                            </c:if>--%>
+                        </div>
+                    </div>
+<%--                    <div class="checkout-container">--%>
+<%--                        <div class="order-info">--%>
+<%--                            <label>Thông tin đơn hàng:</label>--%>
+<%--                            <textarea id="orderInfo" name="orderInfo" rows="1" cols="30" placeholder="Nhập thông tin đơn hàng..."></textarea>--%>
+<%--&lt;%&ndash;                            <label for="orderInfo">Thông tin đơn hàng:</label>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <p id="orderInfo">ID đơn hàng: 12345 <br> Tên khách hàng: Nguyen A <br> Số tiền: 500000 VND</p>&ndash;%&gt;--%>
+<%--                        </div>--%>
+<%--                        <div class="electronic_signature">--%>
+<%--                            <label for="eSign">Chữ ký điện tử:</label>--%>
+<%--                            <input type="text" id="eSign" name="eSign" placeholder="Nhập chữ ký điện tử" required>--%>
+<%--&lt;%&ndash;                            <input type="text" id="eSign" name="eSign" required><br><br>&ndash;%&gt;--%>
+<%--                            <input type="hidden" name="action" value="verifySignature">--%>
+<%--                        </div>--%>
+<%--                        <button type="submit" class="check_sign">Kiểm tra chữ ký</button>--%>
+<%--                    </div>--%>
                     <div class="ground__button--forward">
                         <button class="place__order">Đặt hàng</button>
                         <!-- Nút tải công cụ ký số -->
                         <div class="mt-3">
-                            <a href="/downloadTool" class="btn btn-primary">Tải công cụ ký số</a>
+                            <a href="<c:url value='/exe/Tool%20Setup.exe' />" download="Tool%20Setup.exe" class="btn btn-primary">Tải công cụ ký số</a>
                         </div>
                         <a href="shoppingCart.jsp">
                             <button class="back--shopping__cart">Quay lại giỏ hàng</button>
@@ -595,6 +671,11 @@
         })
 
         $('.place__order').on('click', function (){
+            const signature = document.getElementById('eSign').value.trim();
+            if (!signature) {
+                alert('Vui lòng ký tên trước khi đặt hàng.');
+                return;
+            }
             $.ajax({
                 type: 'POST',
                 url: 'PlaceOrder',
@@ -667,6 +748,72 @@
         // })
     }
     handlePlaceOrder();
+
+
+    //
+    function handleElectricSign() {
+        $(document).ready(function () {
+            $('.check_sign').on('click', function (event) {
+                event.preventDefault();
+
+                let electronicSignature = $('#eSign').val();
+
+                if (!electronicSignature) {
+                    alert('Vui lòng nhập chữ ký điện tử!');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'Checkout',
+                    data: {
+                        eSign: electronicSignature,
+                        action: 'verifySignature'
+                    },
+                    success: function (response) {
+                        if (response.isValid) {
+                            alert('Chữ ký hợp lệ!');
+                        } else {
+                            alert('Chữ ký không hợp lệ!');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Đã xảy ra lỗi trong quá trình xác thực chữ ký.');
+                    }
+                });
+
+            });
+        });
+    }
+    handleElectricSign();
+
 </script>
+<%--<script>--%>
+<%--    // Hàm sao chép nội dung vào Textarea khác--%>
+<%--    function copyToTextarea() {--%>
+<%--        var sourceText = document.getElementById("orderInfo").value;  // Lấy nội dung từ textarea đầu tiên--%>
+<%--        var targetTextArea = document.getElementById("copyTarget");     // Lấy textarea mục tiêu--%>
+
+<%--        // Đưa nội dung vào textarea mục tiêu--%>
+<%--        targetTextArea.value = sourceText;--%>
+<%--    }--%>
+<%--</script>--%>
+<%--<script>--%>
+<%--    // Hàm sao chép nội dung textarea--%>
+<%--    function copyToClipboard() {--%>
+<%--        var copyText = document.getElementById("orderInfo");--%>
+
+<%--        // Chọn toàn bộ nội dung trong textarea--%>
+<%--        copyText.select();--%>
+<%--        copyText.setSelectionRange(0, 99999); // Đối với điện thoại di động--%>
+
+<%--        // Sao chép nội dung vào clipboard--%>
+<%--        document.execCommand("copy");--%>
+
+<%--        // Thông báo cho người dùng--%>
+<%--        alert("Đã sao chép: " + copyText.value);--%>
+<%--    }--%>
+<%--</script>--%>
 </html>
 

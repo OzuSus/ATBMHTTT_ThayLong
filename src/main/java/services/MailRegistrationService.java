@@ -28,14 +28,14 @@ public class MailRegistrationService implements IMailServices{
                 "</body></html>";
         try {
             // luu cac khoa vao file
-            String publicKeyFile = "public_key_" + System.currentTimeMillis() + ".txt";
-            String privateKeyFile = "private_key_" + System.currentTimeMillis() + ".txt";
+            String publicKeyFile = "public_key.rsa";
+            String privateKeyFile = "private_key.rsa";
             FileUtils.saveKeyToFile(publicKeyFile, publicKey);
             FileUtils.saveKeyToFile(privateKeyFile, privateKey);
 
             emailService.sendMaillWithAttachment(to, subject, content, publicKeyFile);
             emailService.sendMaillWithAttachment(to, subject, content, privateKeyFile); // Gọi phương thức gửi email
-            // Sau khi gửi, có thể xóa file tạm nếu không cần lưu lại
+            // xóa file nếu không cần lưu lại
             FileUtils.deleteFile(publicKeyFile);
             FileUtils.deleteFile(privateKeyFile);
 

@@ -22,6 +22,7 @@ public class User implements Serializable {
     private String tokenResetPassword;
     private Timestamp tokenResetPasswordTime;
     private String publicKey;
+    private String sign;
 
     public User() {
     }
@@ -161,6 +162,9 @@ public class User implements Serializable {
         this.publicKey = publicKey;
     }
 
+    public String getSign() {return sign;}
+
+    public void setSign(String sign) {this.sign = sign;}
     @Override
     public String toString() {
         return "User{" +
@@ -182,4 +186,6 @@ public class User implements Serializable {
                 ", tokenResetPasswordTime=" + tokenResetPasswordTime +
                 '}';
     }
+
+
 }
